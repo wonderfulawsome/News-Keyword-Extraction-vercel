@@ -9,9 +9,11 @@ function KRWordRankPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // 필요하다면 여기서 불러오는 뉴스 제목 수를 제한할 수 있습니다.
     fetch('https://news-keyword-extraction.onrender.com/kr-wordrank')
       .then((res) => res.json())
       .then((data) => {
+        // data: { "키워드": 점수, ... } → 배열로 변환 후 점수 내림차순 정렬
         const krArray = Object.keys(data).map(key => ({
           keyword: key,
           score: data[key]
@@ -40,6 +42,7 @@ function KRWordRankPage() {
   };
 
   const barOptions = {
+    indexAxis: 'y', // 수평 막대그래프로 설정
     plugins: {
       title: {
         display: true,
@@ -55,28 +58,25 @@ function KRWordRankPage() {
       x: {
         title: {
           display: true,
-          text: '키워드',
+          text: '점수',
           color: 'white'
         },
-        ticks: { 
-          color: 'white',
-          autoSkip: true,
-          maxRotation: 45,
-          minRotation: 45
-        }
+        ticks: { color: 'white' }
       },
       y: {
         title: {
           display: true,
-          text: '점수',
+          text: '키워드',
           color: 'white'
         },
-        ticks: { color: 'white' },
-        beginAtZero: true
+        ticks: {
+          color: 'white',
+          autoSkip: true,
+          maxTicksLimit: 20
+        }
       }
     }
   };
-  
 
   return (
     <div className="container">
