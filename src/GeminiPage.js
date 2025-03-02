@@ -4,6 +4,7 @@ import './App.css';
 
 function GeminiPage() {
   const [geminiKeywords, setGeminiKeywords] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('https://news-keyword-extraction.onrender.com/data')
@@ -11,8 +12,12 @@ function GeminiPage() {
       .then((data) => {
         const sorted = data.sort((a, b) => b.frequency - a.frequency);
         setGeminiKeywords(sorted);
+        setLoading(false);
       })
-      .catch((err) => console.error('Gemini 키워드 로드 에러:', err));
+      .catch((err) => {
+        console.error('Gemini 키워드 로드 에러:', err);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -25,7 +30,12 @@ function GeminiPage() {
       </nav>
       <div className="container">
         <h2 style={{ textAlign: 'center' }}>Gemini LLM 추출 키워드</h2>
-        {geminiKeywords.length > 0 ? (
+        {loading ? (
+          <div style={{ textAlign: 'center' }}>
+            <div className="spinner"></div>
+            <p>Loading...</p>
+          </div>
+        ) : geminiKeywords.length > 0 ? (
           <div className="keyword-chips">
             {geminiKeywords.map(item => (
               <div key={item.id} className="keyword-chip">
