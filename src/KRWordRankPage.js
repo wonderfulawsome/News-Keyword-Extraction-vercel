@@ -7,16 +7,29 @@ import './App.css';
 function KRWordRankPage() {
   const [krData, setKrData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   useEffect(() => {
-    // 필요하다면 여기서 불러오는 뉴스 제목 수를 제한할 수 있습니다.
+    // 타이머 시작: 로딩 중일 때마다 1초씩 증가
+    let timer;
+    if (loading) {
+      timer = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [loading]);
+
+  useEffect(() => {
     fetch('https://news-keyword-extraction.onrender.com/kr-wordrank')
       .then((res) => res.json())
       .then((data) => {
-        // data: { "키워드": 점수, ... } → 배열로 변환 후 점수 내림차순 정렬
-        const krArray = Object.keys(data).map(key => ({
+        // data: { "키워드": 점수, ... } → 배열로 변환 및 내림차순 정렬
+        const krArray = Object.keys(data).map((key) => ({
           keyword: key,
-          score: data[key]
+          score: data[key],
         }));
         const sortedKR = krArray.sort((a, b) => b.score - a.score);
         setKrData(sortedKR);
@@ -29,16 +42,16 @@ function KRWordRankPage() {
   }, []);
 
   const barData = {
-    labels: krData.map(item => item.keyword),
+    labels: krData.map((item) => item.keyword),
     datasets: [
       {
         label: '키워드 점수',
-        data: krData.map(item => item.score),
+        data: krData.map((item) => item.score),
         backgroundColor: 'rgba(255,255,255,0.6)',
         borderColor: 'rgba(255,255,255,1)',
         borderWidth: 1,
-      }
-    ]
+      },
+    ],
   };
 
   const barOptions = {
@@ -48,34 +61,34 @@ function KRWordRankPage() {
         display: true,
         text: 'KR-WordRank 키워드 점수',
         color: 'white',
-        font: { size: 18 }
+        font: { size: 18 },
       },
       legend: {
-        labels: { color: 'white' }
-      }
+        labels: { color: 'white' },
+      },
     },
     scales: {
       x: {
         title: {
           display: true,
           text: '점수',
-          color: 'white'
+          color: 'white',
         },
-        ticks: { color: 'white' }
+        ticks: { color: 'white' },
       },
       y: {
         title: {
           display: true,
           text: '키워드',
-          color: 'white'
+          color: 'white',
         },
         ticks: {
           color: 'white',
           autoSkip: true,
-          maxTicksLimit: 20
-        }
-      }
-    }
+          maxTicksLimit: 20,
+        },
+      },
+    },
   };
 
   return (
@@ -84,7 +97,11 @@ function KRWordRankPage() {
         <h1 className="title">KR-WordRank 키워드 결과</h1>
       </div>
       {loading ? (
-        <div className="spinner"></div>
+        <div style={{ textAlign: 'center' }}>
+          <div className="spinner"></div>
+          <p>Loading... (약 3분 소요)</p>
+          <p>경과 시간: {elapsedTime}초</p>
+        </div>
       ) : (
         <div style={{ margin: '20px auto', maxWidth: '800px' }}>
           <Bar data={barData} options={barOptions} />
