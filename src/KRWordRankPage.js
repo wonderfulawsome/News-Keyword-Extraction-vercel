@@ -9,8 +9,8 @@ function KRWordRankPage() {
   const [loading, setLoading] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
 
+  // 타이머: 로딩 중이면 1초마다 경과시간 업데이트
   useEffect(() => {
-    // 타이머 시작: 로딩 중일 때마다 1초씩 증가
     let timer;
     if (loading) {
       timer = setInterval(() => {
@@ -22,14 +22,16 @@ function KRWordRankPage() {
     };
   }, [loading]);
 
+  // KR-WordRank 데이터 불러오기
   useEffect(() => {
     fetch('https://news-keyword-extraction.onrender.com/kr-wordrank')
       .then((res) => res.json())
       .then((data) => {
-        // data: { "키워드": 점수, ... } → 배열로 변환 및 내림차순 정렬
+        // data: { "키워드": {score: X, link: "URL"}, ... } → 배열로 변환 및 내림차순 정렬
         const krArray = Object.keys(data).map((key) => ({
           keyword: key,
-          score: data[key],
+          score: data[key].score,
+          link: data[key].link,
         }));
         const sortedKR = krArray.sort((a, b) => b.score - a.score);
         setKrData(sortedKR);
@@ -41,6 +43,7 @@ function KRWordRankPage() {
       });
   }, []);
 
+  // 수평 막대그래프 데이터 구성
   const barData = {
     labels: krData.map((item) => item.keyword),
     datasets: [
@@ -55,7 +58,7 @@ function KRWordRankPage() {
   };
 
   const barOptions = {
-    indexAxis: 'y', // 수평 막대그래프로 설정
+    indexAxis: 'y', // 수평 막대그래프
     plugins: {
       title: {
         display: true,
@@ -89,6 +92,18 @@ function KRWordRankPage() {
         },
       },
     },
+    // 차트 클릭 시 처리하는 이벤트 핸들러
+    onClick: (event, elements) => {
+      if (elements && elements.length > 0) {
+        const index = elements[0].index;
+        const link = krData[index].link;
+        if (link) {
+          window.open(link, '_blank');
+        } else {
+          alert("해당 키워드와 관련된 기사를 찾을 수 없습니다.");
+        }
+      }
+    },
   };
 
   return (
@@ -105,6 +120,9 @@ function KRWordRankPage() {
       ) : (
         <div style={{ margin: '20px auto', maxWidth: '800px' }}>
           <Bar data={barData} options={barOptions} />
+          <p style={{ textAlign: 'center', marginTop: '10px' }}>
+            (각 막대를 클릭하면 해당 기사로 이동합니다)
+          </p>
         </div>
       )}
       <div style={{ textAlign: 'center', marginTop: '40px' }}>
