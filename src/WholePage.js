@@ -6,7 +6,7 @@ import './App.css';
 
 function WholePage() {
   const category = "전체";
-  const [yakeData, setYakeData] = useState([]);
+  const [kowordrankData, setKoWordRankData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
 
@@ -19,31 +19,35 @@ function WholePage() {
   }, [loading]);
 
   useEffect(() => {
-    fetch(`https://news-keyword-extraction.onrender.com/yake?category=${category}`)
+    // /kowordrank?category=... 로 수정
+    fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
       .then(data => {
-        const yakeArray = Object.keys(data).map(key => ({
+        // 데이터 { 키워드: {score, link}, ... } 형태
+        const wordArray = Object.keys(data).map(key => ({
           keyword: key,
           score: data[key].score,
           link: data[key].link,
         }));
-        // YAKE는 낮은 점수가 중요하므로 오름차순 정렬
-        const sortedYake = yakeArray.sort((a, b) => a.score - b.score);
-        setYakeData(sortedYake);
+        // KoWordRank 점수는 일반적으로 높을수록 중요하지만,
+        // 원 코드 구조(필터링 등)에 따라 정렬 방향 정하시면 됩니다.
+        // 예시로 'score' 내림차순으로 정렬:
+        const sorted = wordArray.sort((a, b) => b.score - a.score);
+        setKoWordRankData(sorted);
         setLoading(false);
       })
       .catch(err => {
-        console.error('YAKE 에러:', err);
+        console.error('KoWordRank 에러:', err);
         setLoading(false);
       });
   }, [category]);
 
   const barData = {
-    labels: yakeData.map(item => item.keyword),
+    labels: kowordrankData.map(item => item.keyword),
     datasets: [
       {
         label: '키워드 점수',
-        data: yakeData.map(item => item.score),
+        data: kowordrankData.map(item => item.score),
         backgroundColor: 'rgba(255,255,255,0.6)',
         borderColor: 'rgba(255,255,255,1)',
         borderWidth: 1,
@@ -52,11 +56,11 @@ function WholePage() {
   };
 
   const barOptions = {
-    indexAxis: 'y',
+    indexAxis: 'y', // 가로 막대
     plugins: {
       title: {
         display: true,
-        text: `YAKE 모델 키워드 결과 - ${category}`,
+        text: `KoWordRank 모델 키워드 결과 - ${category}`,
         color: 'white',
         font: { size: 18 }
       },
@@ -77,7 +81,7 @@ function WholePage() {
     onClick: (event, elements) => {
       if (elements && elements.length > 0) {
         const index = elements[0].index;
-        const link = yakeData[index].link;
+        const link = kowordrankData[index].link;
         if (link) {
           window.open(link, '_blank');
         } else {
@@ -92,7 +96,8 @@ function WholePage() {
       <div className="navbar">
         <div className="nav-title">실시간 뉴스 키워드</div>
         <div className="nav-links">
-          <Link to="/yake?category=전체" className="button">전체</Link>
+          {/* 전체 페이지는 / 경로 */}
+          <Link to="/" className="button">전체</Link>
           <Link to="/politics" className="button" style={{ marginLeft: '10px' }}>정치</Link>
           <Link to="/economy" className="button" style={{ marginLeft: '10px' }}>경제</Link>
           <Link to="/society" className="button" style={{ marginLeft: '10px' }}>사회</Link>
@@ -103,7 +108,7 @@ function WholePage() {
         </div>
       </div>
       <div className="header" style={{ textAlign: 'center' }}>
-        <h1 className="title">YAKE 모델 키워드 결과 - {category}</h1>
+        <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
       {loading ? (
         <div style={{ textAlign: 'center' }}>
