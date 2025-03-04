@@ -26,6 +26,7 @@ function GeminiPage() {
         <div className="nav-title">실시간 뉴스 키워드</div>
         <div className="nav-links">
           <Link to="/kr-wordrank" className="button">KR-WordRank Model</Link>
+          <Link to="/yake" className="button" style={{ marginLeft: '10px' }}>YAKE Model</Link>
         </div>
       </nav>
       <div className="container">
