@@ -10,7 +10,7 @@ function WholePage() {
   const [loading, setLoading] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  // 로딩 시간 계산
+  // 로딩 시간(초) 계산
   useEffect(() => {
     let timer;
     if (loading) {
@@ -21,7 +21,7 @@ function WholePage() {
     };
   }, [loading]);
 
-  // KoWordRank API 호출
+  // /kowordrank?category=전체 호출
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
@@ -31,12 +31,13 @@ function WholePage() {
           setLoading(false);
           return;
         }
+        // {키워드: {score, link}, ...} -> 배열화
         const wordArray = Object.keys(data).map(key => ({
           keyword: key,
           score: data[key].score,
-          link: data[key].link
+          link: data[key].link,
         }));
-        // 점수 내림차순
+        // score 내림차순 정렬
         const sorted = wordArray.sort((a, b) => b.score - a.score);
         setKoWordRankData(sorted);
         setLoading(false);
@@ -47,7 +48,6 @@ function WholePage() {
       });
   }, [category]);
 
-  // 차트 데이터
   const barData = {
     labels: kowordrankData.map(item => item.keyword),
     datasets: [
@@ -61,16 +61,16 @@ function WholePage() {
     ]
   };
 
-  // 차트 옵션
+  // ★ text 부분에 백틱(`) 사용하여 문법오류 방지
   const barOptions = {
-    indexAxis: 'y', 
-    maintainAspectRatio: false,  // 부모 크기에 맞춰 확장
+    indexAxis: 'y',
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
         text: `KoWordRank 모델 키워드 결과 - ${category}`,
         color: 'white',
-        font: { size: 18 }
+        font: { size: 18 },
       },
       legend: { labels: { color: 'white' } }
     },
@@ -88,8 +88,11 @@ function WholePage() {
       if (elements && elements.length > 0) {
         const index = elements[0].index;
         const link = kowordrankData[index].link;
-        if (link) window.open(link, '_blank');
-        else alert("해당 키워드와 관련된 기사를 찾을 수 없습니다.");
+        if (link) {
+          window.open(link, '_blank');
+        } else {
+          alert("해당 키워드와 관련된 기사를 찾을 수 없습니다.");
+        }
       }
     }
   };
@@ -109,7 +112,7 @@ function WholePage() {
           <Link to="/sports" className="button" style={{ marginLeft: '10px' }}>스포츠</Link>
         </div>
       </div>
-
+      
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
@@ -122,6 +125,7 @@ function WholePage() {
         </div>
       ) : (
         <div style={{ margin: '20px auto', maxWidth: '900px' }}>
+          {/* 차트 크기 */}
           <div style={{ width: '1000px', height: '600px', margin: '0 auto' }}>
             <Bar data={barData} options={barOptions} />
           </div>
