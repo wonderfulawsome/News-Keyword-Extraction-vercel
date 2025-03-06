@@ -15,9 +15,12 @@ function EntertainmentPage() {
     if (loading) {
       timer = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     }
-    return () => { if (timer) clearInterval(timer); };
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [loading]);
 
+  // /kowordrank?category=연예
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
@@ -50,7 +53,7 @@ function EntertainmentPage() {
         data: kowordrankData.map(item => item.score),
         backgroundColor: 'rgba(255,255,255,0.6)',
         borderColor: 'rgba(255,255,255,1)',
-        borderWidth: 1,
+        borderWidth: 1
       }
     ]
   };
@@ -61,7 +64,7 @@ function EntertainmentPage() {
     plugins: {
       title: {
         display: true,
-        text: `KoWordRank 모델 키워드 결과 - ${category}`, // ★ 수정됨
+        text: `KoWordRank 모델 키워드 결과 - ${category}`,
         color: 'white',
         font: { size: 18 }
       },
@@ -72,7 +75,7 @@ function EntertainmentPage() {
       y: { title: { display: true, text: '키워드', color: 'white' }, ticks: { color: 'white', autoSkip: true, maxTicksLimit: 20 } }
     },
     onClick: (event, elements) => {
-      if (elements && elements.length > 0) {
+      if (elements?.length > 0) {
         const index = elements[0].index;
         const link = kowordrankData[index].link;
         if (link) window.open(link, '_blank');
@@ -96,7 +99,7 @@ function EntertainmentPage() {
           <Link to="/sports" className="button" style={{ marginLeft: '10px' }}>스포츠</Link>
         </div>
       </div>
-
+      
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
