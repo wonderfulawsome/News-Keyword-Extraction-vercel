@@ -120,7 +120,7 @@ function WholePage() {
       {loading ? (
         <div style={{ textAlign: 'center' }}>
           <div className="spinner"></div>
-          <p>Loading... (약 40초 소요)</p>
+          <p>Loading... (약 20초 소요)</p>
           <p>경과 시간: {elapsedTime}초</p>
         </div>
       ) : (
