@@ -20,7 +20,6 @@ function EntertainmentPage() {
     };
   }, [loading]);
 
-  // /kowordrank?category=연예
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
@@ -71,11 +70,17 @@ function EntertainmentPage() {
       legend: { labels: { color: 'white' } }
     },
     scales: {
-      x: { title: { display: true, text: '점수', color: 'white' }, ticks: { color: 'white' } },
-      y: { title: { display: true, text: '키워드', color: 'white' }, ticks: { color: 'white', autoSkip: true, maxTicksLimit: 20 } }
+      x: { 
+        title: { display: true, text: '점수', color: 'white' }, 
+        ticks: { color: 'white' } 
+      },
+      y: { 
+        title: { display: true, text: '키워드', color: 'white' }, 
+        ticks: { color: 'white', autoSkip: true, maxTicksLimit: 20 } 
+      }
     },
     onClick: (event, elements) => {
-      if (elements?.length > 0) {
+      if (elements && elements.length > 0) {
         const index = elements[0].index;
         const link = kowordrankData[index].link;
         if (link) window.open(link, '_blank');
@@ -86,6 +91,7 @@ function EntertainmentPage() {
 
   return (
     <div className="container">
+      {/* Navbar */}
       <div className="navbar">
         <div className="nav-title">실시간 뉴스 키워드</div>
         <div className="nav-links">
@@ -100,24 +106,23 @@ function EntertainmentPage() {
         </div>
       </div>
       
+      {/* Header */}
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
+        <p style={{ marginTop: '5px' }}>(각 막대를 클릭하면 해당 기사로 이동합니다)</p>
       </div>
 
       {loading ? (
         <div style={{ textAlign: 'center' }}>
           <div className="spinner"></div>
-          <p>Loading... (약 20초 소요)</p>
+          <p>Loading... (약 40초 소요)</p>
           <p>경과 시간: {elapsedTime}초</p>
         </div>
       ) : (
-        <div style={{ margin: '20px auto', maxWidth: '900px' }}>
+        <div style={{ margin: '20px auto', maxWidth: '1200px' }}>
           <div style={{ width: '1000px', height: '600px', margin: '0 auto' }}>
             <Bar data={barData} options={barOptions} />
           </div>
-          <p style={{ textAlign: 'center', marginTop: '10px' }}>
-            (각 막대를 클릭하면 해당 기사로 이동합니다)
-          </p>
         </div>
       )}
 
