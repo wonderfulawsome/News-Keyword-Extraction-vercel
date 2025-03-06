@@ -31,8 +31,7 @@ body {
 }
 
 .container {
--  max-width: 900px;
-+  max-width: 1200px;  /* 예: 1200px로 늘리거나, 아예 none */
+  max-width: 1200px;  /* 최대 폭을 1200px로 설정 */
   margin: 20px auto;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.2);
