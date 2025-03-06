@@ -15,9 +15,12 @@ function EconomyPage() {
     if (loading) {
       timer = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     }
-    return () => { if (timer) clearInterval(timer); };
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [loading]);
 
+  // /kowordrank?category=경제
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
@@ -50,7 +53,7 @@ function EconomyPage() {
         data: kowordrankData.map(item => item.score),
         backgroundColor: 'rgba(255,255,255,0.6)',
         borderColor: 'rgba(255,255,255,1)',
-        borderWidth: 1
+        borderWidth: 1,
       }
     ]
   };
@@ -65,14 +68,22 @@ function EconomyPage() {
         color: 'white',
         font: { size: 18 }
       },
-      legend: { labels: { color: 'white' } }
+      legend: {
+        labels: { color: 'white' }
+      }
     },
     scales: {
-      x: { title: { display: true, text: '점수', color: 'white' }, ticks: { color: 'white' } },
-      y: { title: { display: true, text: '키워드', color: 'white' }, ticks: { color: 'white' } }
+      x: {
+        title: { display: true, text: '점수', color: 'white' },
+        ticks: { color: 'white' }
+      },
+      y: {
+        title: { display: true, text: '키워드', color: 'white' },
+        ticks: { color: 'white', autoSkip: true, maxTicksLimit: 20 }
+      }
     },
     onClick: (event, elements) => {
-      if (elements?.length > 0) {
+      if (elements && elements.length > 0) {
         const index = elements[0].index;
         const link = kowordrankData[index].link;
         if (link) window.open(link, '_blank');
@@ -96,7 +107,7 @@ function EconomyPage() {
           <Link to="/sports" className="button" style={{ marginLeft: '10px' }}>스포츠</Link>
         </div>
       </div>
-
+      
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
@@ -104,7 +115,7 @@ function EconomyPage() {
       {loading ? (
         <div style={{ textAlign: 'center' }}>
           <div className="spinner"></div>
-          <p>Loading... (약 40초 소요)</p>
+          <p>Loading... (약 3분 소요)</p>
           <p>경과 시간: {elapsedTime}초</p>
         </div>
       ) : (
@@ -113,7 +124,7 @@ function EconomyPage() {
             <Bar data={barData} options={barOptions} />
           </div>
           <p style={{ textAlign: 'center', marginTop: '10px' }}>
-            (막대를 클릭하면 해당 기사로 이동합니다)
+            (각 막대를 클릭하면 해당 기사로 이동합니다)
           </p>
         </div>
       )}
