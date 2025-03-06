@@ -26,12 +26,17 @@ function WholePage() {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
       .then(data => {
+        if (data.error) {
+          console.error('API 에러:', data.error);
+          setLoading(false);
+          return;
+        }
         const wordArray = Object.keys(data).map(key => ({
           keyword: key,
           score: data[key].score,
-          link: data[key].link,
+          link: data[key].link
         }));
-        // score 내림차순 정렬
+        // 점수 내림차순
         const sorted = wordArray.sort((a, b) => b.score - a.score);
         setKoWordRankData(sorted);
         setLoading(false);
@@ -42,7 +47,7 @@ function WholePage() {
       });
   }, [category]);
 
-  // 차트용 데이터
+  // 차트 데이터
   const barData = {
     labels: kowordrankData.map(item => item.keyword),
     datasets: [
@@ -58,9 +63,8 @@ function WholePage() {
 
   // 차트 옵션
   const barOptions = {
-    indexAxis: 'y', // 가로 막대
-    // 그래프가 부모 컨테이너 크기에 맞춰 확대/축소될 수 있도록
-    maintainAspectRatio: false,
+    indexAxis: 'y', 
+    maintainAspectRatio: false,  // 부모 크기에 맞춰 확장
     plugins: {
       title: {
         display: true,
@@ -68,9 +72,7 @@ function WholePage() {
         color: 'white',
         font: { size: 18 }
       },
-      legend: {
-        labels: { color: 'white' }
-      }
+      legend: { labels: { color: 'white' } }
     },
     scales: {
       x: {
@@ -86,11 +88,8 @@ function WholePage() {
       if (elements && elements.length > 0) {
         const index = elements[0].index;
         const link = kowordrankData[index].link;
-        if (link) {
-          window.open(link, '_blank');
-        } else {
-          alert("해당 키워드와 관련된 기사를 찾을 수 없습니다.");
-        }
+        if (link) window.open(link, '_blank');
+        else alert("해당 키워드와 관련된 기사를 찾을 수 없습니다.");
       }
     }
   };
@@ -123,11 +122,6 @@ function WholePage() {
         </div>
       ) : (
         <div style={{ margin: '20px auto', maxWidth: '900px' }}>
-          {/* 
-            width/height 커스터마이징을 위한 div
-            maintainAspectRatio를 false로 둔 상태에서
-            해당 div 크기에 맞춰 차트가 확장됨
-          */}
           <div style={{ width: '1000px', height: '600px', margin: '0 auto' }}>
             <Bar data={barData} options={barOptions} />
           </div>
