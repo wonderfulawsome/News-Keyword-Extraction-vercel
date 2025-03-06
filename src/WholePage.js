@@ -10,31 +10,34 @@ function WholePage() {
   const [loading, setLoading] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
 
+  // 로딩 시간 계산 (초 단위 증가)
   useEffect(() => {
     let timer;
     if (loading) {
       timer = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     }
-    return () => { if (timer) clearInterval(timer); };
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [loading]);
 
+  // /kowordrank?category=... 엔드포인트 호출
   useEffect(() => {
-    // /kowordrank?category=... 로 수정
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
       .then(data => {
-        // 데이터 { 키워드: {score, link}, ... } 형태
+        // data: { 키워드: { score, link }, ... }
         const wordArray = Object.keys(data).map(key => ({
           keyword: key,
           score: data[key].score,
-          link: data[key].link,
+          link: data[key].link
         }));
-        // KoWordRank 점수는 일반적으로 높을수록 중요하지만,
-        // 원 코드 구조(필터링 등)에 따라 정렬 방향 정하시면 됩니다.
-        // 예시로 'score' 내림차순으로 정렬:
+        // KoWordRank 점수: 일반적으로 높을수록 중요한 키워드
+        // 여기서는 내림차순 정렬(높은 score → 앞으로)
         const sorted = wordArray.sort((a, b) => b.score - a.score);
+
         setKoWordRankData(sorted);
-        setLoading(false);
+        setLoading(false);  // 로딩 상태 해제
       })
       .catch(err => {
         console.error('KoWordRank 에러:', err);
@@ -42,6 +45,7 @@ function WholePage() {
       });
   }, [category]);
 
+  // 차트 데이터
   const barData = {
     labels: kowordrankData.map(item => item.keyword),
     datasets: [
@@ -55,6 +59,7 @@ function WholePage() {
     ]
   };
 
+  // 차트 옵션
   const barOptions = {
     indexAxis: 'y', // 가로 막대
     plugins: {
@@ -107,9 +112,11 @@ function WholePage() {
           <Link to="/sports" className="button" style={{ marginLeft: '10px' }}>스포츠</Link>
         </div>
       </div>
+
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
+
       {loading ? (
         <div style={{ textAlign: 'center' }}>
           <div className="spinner"></div>
@@ -124,6 +131,7 @@ function WholePage() {
           </p>
         </div>
       )}
+
       <div style={{ textAlign: 'center', marginTop: '40px' }}>
         <Link to="/">
           <button className="button">메인 페이지로 돌아가기</button>
