@@ -15,9 +15,12 @@ function PoliticsPage() {
     if (loading) {
       timer = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     }
-    return () => { if (timer) clearInterval(timer); };
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [loading]);
 
+  // /kowordrank?category=정치
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
@@ -61,18 +64,27 @@ function PoliticsPage() {
     plugins: {
       title: {
         display: true,
+        // ★ 문자열 템플릿
         text: `KoWordRank 모델 키워드 결과 - ${category}`,
         color: 'white',
         font: { size: 18 }
       },
-      legend: { labels: { color: 'white' } }
+      legend: {
+        labels: { color: 'white' }
+      }
     },
     scales: {
-      x: { title: { display: true, text: '점수', color: 'white' }, ticks: { color: 'white' } },
-      y: { title: { display: true, text: '키워드', color: 'white' }, ticks: { color: 'white', autoSkip: true, maxTicksLimit: 20 } }
+      x: {
+        title: { display: true, text: '점수', color: 'white' },
+        ticks: { color: 'white' }
+      },
+      y: {
+        title: { display: true, text: '키워드', color: 'white' },
+        ticks: { color: 'white', autoSkip: true, maxTicksLimit: 20 }
+      }
     },
     onClick: (event, elements) => {
-      if (elements?.length > 0) {
+      if (elements && elements.length > 0) {
         const index = elements[0].index;
         const link = kowordrankData[index].link;
         if (link) window.open(link, '_blank');
@@ -96,7 +108,7 @@ function PoliticsPage() {
           <Link to="/sports" className="button" style={{ marginLeft: '10px' }}>스포츠</Link>
         </div>
       </div>
-
+      
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
@@ -109,11 +121,12 @@ function PoliticsPage() {
         </div>
       ) : (
         <div style={{ margin: '20px auto', maxWidth: '900px' }}>
+          {/* 차트 크기 */}
           <div style={{ width: '1000px', height: '600px', margin: '0 auto' }}>
             <Bar data={barData} options={barOptions} />
           </div>
           <p style={{ textAlign: 'center', marginTop: '10px' }}>
-            (막대를 클릭하면 해당 기사로 이동합니다)
+            (각 막대를 클릭하면 해당 기사로 이동합니다)
           </p>
         </div>
       )}
