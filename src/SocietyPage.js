@@ -15,9 +15,12 @@ function SocietyPage() {
     if (loading) {
       timer = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     }
-    return () => { if (timer) clearInterval(timer); };
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [loading]);
 
+  // /kowordrank?category=사회
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
@@ -61,7 +64,8 @@ function SocietyPage() {
     plugins: {
       title: {
         display: true,
-        text: `KoWordRank 모델 키워드 결과 - ${category}`, // ★ 수정됨
+        // ★ 문자열 템플릿
+        text: `KoWordRank 모델 키워드 결과 - ${category}`,
         color: 'white',
         font: { size: 18 }
       },
@@ -96,7 +100,7 @@ function SocietyPage() {
           <Link to="/sports" className="button" style={{ marginLeft: '10px' }}>스포츠</Link>
         </div>
       </div>
-
+      
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
       </div>
