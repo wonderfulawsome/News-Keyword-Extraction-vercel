@@ -10,7 +10,7 @@ function WholePage() {
   const [loading, setLoading] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(0);
 
-  // 로딩 시간 계산 (초 단위 증가)
+  // 로딩 시간 계산
   useEffect(() => {
     let timer;
     if (loading) {
@@ -21,23 +21,20 @@ function WholePage() {
     };
   }, [loading]);
 
-  // /kowordrank?category=... 엔드포인트 호출
+  // KoWordRank API 호출
   useEffect(() => {
     fetch(`https://news-keyword-extraction.onrender.com/kowordrank?category=${category}`)
       .then(res => res.json())
       .then(data => {
-        // data: { 키워드: { score, link }, ... }
         const wordArray = Object.keys(data).map(key => ({
           keyword: key,
           score: data[key].score,
-          link: data[key].link
+          link: data[key].link,
         }));
-        // KoWordRank 점수: 일반적으로 높을수록 중요한 키워드
-        // 여기서는 내림차순 정렬(높은 score → 앞으로)
+        // score 내림차순 정렬
         const sorted = wordArray.sort((a, b) => b.score - a.score);
-
         setKoWordRankData(sorted);
-        setLoading(false);  // 로딩 상태 해제
+        setLoading(false);
       })
       .catch(err => {
         console.error('KoWordRank 에러:', err);
@@ -45,7 +42,7 @@ function WholePage() {
       });
   }, [category]);
 
-  // 차트 데이터
+  // 차트용 데이터
   const barData = {
     labels: kowordrankData.map(item => item.keyword),
     datasets: [
@@ -62,6 +59,8 @@ function WholePage() {
   // 차트 옵션
   const barOptions = {
     indexAxis: 'y', // 가로 막대
+    // 그래프가 부모 컨테이너 크기에 맞춰 확대/축소될 수 있도록
+    maintainAspectRatio: false,
     plugins: {
       title: {
         display: true,
@@ -101,7 +100,6 @@ function WholePage() {
       <div className="navbar">
         <div className="nav-title">실시간 뉴스 키워드</div>
         <div className="nav-links">
-          {/* 전체 페이지는 / 경로 */}
           <Link to="/" className="button">전체</Link>
           <Link to="/politics" className="button" style={{ marginLeft: '10px' }}>정치</Link>
           <Link to="/economy" className="button" style={{ marginLeft: '10px' }}>경제</Link>
@@ -124,8 +122,15 @@ function WholePage() {
           <p>경과 시간: {elapsedTime}초</p>
         </div>
       ) : (
-        <div style={{ margin: '20px auto', maxWidth: '800px' }}>
-          <Bar data={barData} options={barOptions} />
+        <div style={{ margin: '20px auto', maxWidth: '900px' }}>
+          {/* 
+            width/height 커스터마이징을 위한 div
+            maintainAspectRatio를 false로 둔 상태에서
+            해당 div 크기에 맞춰 차트가 확장됨
+          */}
+          <div style={{ width: '1000px', height: '600px', margin: '0 auto' }}>
+            <Bar data={barData} options={barOptions} />
+          </div>
           <p style={{ textAlign: 'center', marginTop: '10px' }}>
             (각 막대를 클릭하면 해당 기사로 이동합니다)
           </p>
