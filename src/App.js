@@ -16,7 +16,7 @@ function App() {
       <Routes>
         {/* 메인("/") 경로 -> WholePage */}
         <Route path="/" element={<WholePage />} />
-        
+
         {/* 각 카테고리 페이지 */}
         <Route path="/politics" element={<PoliticsPage />} />
         <Route path="/economy" element={<EconomyPage />} />
