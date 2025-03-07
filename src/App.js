@@ -14,7 +14,7 @@ function App() {
   return (
     <Router>
       {/* "뉴스펠링" 브랜드 문구를 상단 중앙에 배치 (고정하지 않고 프레임 없이) */}
-      <div className="branding">뉴스펠링</div>
+      <div className="branding">Newspelling</div>
       <Routes>
         <Route path="/" element={<WholePage />} />
         <Route path="/politics" element={<PoliticsPage />} />
