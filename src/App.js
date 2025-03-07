@@ -13,7 +13,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      {/* "뉴스펠링"이라는 문구를 모든 페이지에 고정으로 표시 */}
+      {/* Branding: "뉴스펠링" */}
       <div className="branding">뉴스펠링</div>
       <Routes>
         <Route path="/" element={<WholePage />} />
