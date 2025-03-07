@@ -1,18 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 body {
   margin: 0;
   padding: 0;
   background-color: #4682B4; /* Steel Blue */
-  font-family: Arial, sans-serif;
+  font-family: 'Montserrat', Arial, sans-serif;
   color: white;
 }
 
-/* 브랜드 문구: "뉴스펠링" - 상단 중앙에 위치 (고정하지 않고, 프레임 없이) */
+/* 브랜드 문구 (뉴스펠링) */
 .branding {
   text-align: center;
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: 700;
   color: white;
-  margin: 20px 0;  /* 상하 여백 */
+  margin: 20px 0;
 }
 
 /* 네비게이션 바 */
