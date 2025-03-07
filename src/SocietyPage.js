@@ -108,7 +108,7 @@ function SocietyPage() {
       
       {/* Header */}
       <div className="header" style={{ textAlign: 'center' }}>
-        <h1 className="title">KoWordRank 모델 키워드 결과 - {category}</h1>
+        <h1 className="title">실시간 뉴스 키워드 - {category}</h1>
         <p style={{ marginTop: '5px' }}>(각 막대를 클릭하면 해당 기사로 이동합니다)</p>
       </div>
 
