@@ -6,6 +6,22 @@ body {
   color: white;
 }
 
+/* Branding 스타일: 미니멀하고 세련된 블루앤 화이트 테마 */
+.branding {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(70, 130, 180, 0.9); /* Steel Blue 약간 투명 */
+  padding: 8px 16px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+/* 네비게이션 바 */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -13,6 +29,7 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
   padding: 10px 20px;
   border-bottom: 2px solid white;
+  margin-top: 50px; /* Branding 영역을 위해 상단에 여백 추가 */
 }
 
 .nav-title {
@@ -28,10 +45,12 @@ body {
   padding: 8px 16px;
   border-radius: 5px;
   font-weight: bold;
+  margin-left: 10px;
 }
 
+/* 컨테이너: 내용에 따라 넓어지도록 */
 .container {
-  max-width: 1200px;  /* 최대 폭을 1200px로 설정 */
+  max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -39,6 +58,7 @@ body {
   animation: fadeInUp 1.5s ease-out;
 }
 
+/* Header */
 .header {
   text-align: center;
   margin-bottom: 20px;
@@ -49,6 +69,7 @@ body {
   margin-bottom: 10px;
 }
 
+/* 버튼 스타일 */
 .button {
   padding: 10px 20px;
   background-color: white;
@@ -60,6 +81,7 @@ body {
   margin-top: 10px;
 }
 
+/* 로딩 스피너 */
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid white;
@@ -84,16 +106,4 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-
-.branding {
-  position: fixed;
-  top: 0;
-  left: 0;
-  font-size: 2rem;
-  font-weight: bold;
-  color: white;
-  padding: 10px;
-  z-index: 1000; /* 다른 요소 위에 표시되도록 */
-}
-
 }
