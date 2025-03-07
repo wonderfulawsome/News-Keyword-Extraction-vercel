@@ -13,11 +13,10 @@ import './App.css';
 function App() {
   return (
     <Router>
+      {/* "뉴스펠링"이라는 문구를 모든 페이지에 고정으로 표시 */}
+      <div className="branding">뉴스펠링</div>
       <Routes>
-        {/* 메인("/") 경로 -> WholePage */}
         <Route path="/" element={<WholePage />} />
-
-        {/* 각 카테고리 페이지 */}
         <Route path="/politics" element={<PoliticsPage />} />
         <Route path="/economy" element={<EconomyPage />} />
         <Route path="/society" element={<SocietyPage />} />
