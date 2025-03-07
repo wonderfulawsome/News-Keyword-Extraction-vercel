@@ -13,7 +13,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      {/* Branding: "뉴스펠링" */}
+      {/* 중앙 상단에 브랜드 요소 표시 */}
       <div className="branding">뉴스펠링</div>
       <Routes>
         <Route path="/" element={<WholePage />} />
