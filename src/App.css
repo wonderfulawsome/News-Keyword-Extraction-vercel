@@ -6,18 +6,20 @@ body {
   color: white;
 }
 
-/* Branding 스타일: 미니멀하고 세련된 블루앤 화이트 테마 */
+/* 중앙 상단에 위치하는 브랜드 요소 */
 .branding {
   position: fixed;
-  top: 0;
-  left: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
+  top: 20px;           /* 상단에서 20px 떨어짐 */
+  left: 50%;           /* 좌우 중앙 */
+  transform: translateX(-50%);
+  font-size: 2.5rem;    /* 글자 크기 확대 */
+  font-weight: 700;
   color: #fff;
-  background: rgba(70, 130, 180, 0.9); /* Steel Blue 약간 투명 */
-  padding: 8px 16px;
-  border-bottom-right-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  background: rgba(70, 130, 180, 0.9); /* Steel Blue, 약간 투명 */
+  padding: 12px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
   z-index: 1000;
 }
 
@@ -29,7 +31,7 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
   padding: 10px 20px;
   border-bottom: 2px solid white;
-  margin-top: 50px; /* Branding 영역을 위해 상단에 여백 추가 */
+  margin-top: 80px; /* 상단 브랜드와 겹치지 않도록 여백 추가 */
 }
 
 .nav-title {
@@ -48,7 +50,7 @@ body {
   margin-left: 10px;
 }
 
-/* 컨테이너: 내용에 따라 넓어지도록 */
+/* 컨테이너 */
 .container {
   max-width: 1200px;
   margin: 20px auto;
@@ -58,7 +60,7 @@ body {
   animation: fadeInUp 1.5s ease-out;
 }
 
-/* Header */
+/* 헤더 */
 .header {
   text-align: center;
   margin-bottom: 20px;
