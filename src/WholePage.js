@@ -31,7 +31,6 @@ function WholePage() {
           setLoading(false);
           return;
         }
-        // API 응답이 배열 형태로 반환되므로 바로 map() 사용
         const sorted = data.sort((a, b) => b.score - a.score);
         setKoWordRankData(sorted);
         setLoading(false);
@@ -107,7 +106,7 @@ function WholePage() {
         </div>
       </div>
 
-      {/* 헤더: 제목 및 안내문구 */}
+      {/* 헤더 */}
       <div className="header" style={{ textAlign: 'center' }}>
         <h1 className="title">실시간 뉴스 키워드 - {category}</h1>
         <p style={{ marginTop: '5px' }}>(각 막대를 클릭하면 해당 기사로 이동합니다)</p>
